@@ -3,12 +3,12 @@ package solver
 
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.FreeSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest._
 
 import util.arrays._
 
 
-class RK4Spec extends FreeSpec with ShouldMatchers with PropertyChecks {
+class RK4Spec extends FreeSpec with Matchers with PropertyChecks {
 
    lazy val NoForce = new RK4.F {
      val N = 6
@@ -58,9 +58,9 @@ class RK4Spec extends FreeSpec with ShouldMatchers with PropertyChecks {
       res(0) should be (init(0))
       res(1) should be (init(1))
       res(2) should be (init(2))
-      res(3) should be ( (init(3) + init(0)*t) plusOrMinus 1e-8)
-      res(4) should be ( (init(4) + init(1)*t) plusOrMinus 1e-8)
-      res(5) should be ( (init(5) + init(2)*t) plusOrMinus 1e-8)
+      res(3) should be ( (init(3) + init(0)*t) +- 1e-8)
+      res(4) should be ( (init(4) + init(1)*t) +- 1e-8)
+      res(5) should be ( (init(5) + init(2)*t) +- 1e-8)
     }
 
   }
@@ -75,9 +75,9 @@ class RK4Spec extends FreeSpec with ShouldMatchers with PropertyChecks {
     val eps = 1e-8
 
     def linear( x: Double, xD: Double, t: Double ) = 
-      (x + xD*t) plusOrMinus eps
+      (x + xD*t) +- eps
     def quadratic( x: Double, xD: Double, xDD: Double, t: Double ) = 
-        ( x + xD*t + xDD*t*t/2 ) plusOrMinus eps
+        ( x + xD*t + xDD*t*t/2 ) +- eps
 
     "if v!=0 then it moves linearly" in {
       val init = safe( Array( -1.0, 0.0, 2.0, 1.0, 2.0, 3.0 ) )
