@@ -13,8 +13,7 @@ libraryDependencies ++= Seq(
   //"org.scalatest" %% "scalatest" % "1.9.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
   "com.typesafe.akka" %%  "akka-actor" % "2.3.12",
-  "com.typesafe.akka" % "akka-stream-experimental_2.11" % "1.0-RC4",
-  "org.streum" %% "configrity-core" % "1.0.1"
+  "com.typesafe.akka" % "akka-stream-experimental_2.11" % "1.0-RC4"
 )
 
 fork in run := true
