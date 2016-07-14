@@ -1,0 +1,591 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage[linktocpage=true]{hyperref}
+\usepackage{natbib}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{rotating}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\definecolor{titlepagecolor}{cmyk}{0,0,0,0}
+\definecolor{k}{cmyk}{1,1,1,1} 
+\definecolor{namecolor}{cmyk}{1,0,0.56,.18}  			% Declare here the emphasis color
+\usepackage{sidecap} 													% To add caption next to the figure
+\usepackage[labelfont=bf, font=small]{caption} 	% Customize captions
+\DeclareCaptionFont{namecolor}{\color{namecolor}}
+\captionsetup{labelfont={namecolor,bf}}
+
+% Customize section labels
+\titleformat{\section}
+  {\normalfont\sffamily\huge\bfseries\color{namecolor}}
+ {\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\sffamily\Large\bfseries\color{namecolor}}
+  {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\sffamily\large\bfseries\color{namecolor}}
+  {\thesubsubsection}{1em}{}
+
+\pagestyle{fancy}
+
+\lhead{}
+\chead{}
+\rhead{}
+
+\lfoot{\color{namecolor}\textsf{GBF User Manual}}
+\cfoot{}
+\rfoot{\color{namecolor}\textsf{\thepage}}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+\author{Sebastien Biass & Jean-Luc Falcone}
+\title{Great Balls of Fire}
+
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 1. Title page 
+
+\begin{titlepage}
+\newgeometry{left=7.5cm} %defines the geometry for the titlepage
+\pagecolor{titlepagecolor}
+\noindent
+\includegraphics[width=5cm]{logo.png}\\[2em]  	% Include your custom logo here
+\color{namecolor}
+\makebox[0pt][l]{\rule{1.3\textwidth}{1pt}}
+\par
+\noindent
+\\[4em] 
+\textbf{\textsf{\Huge{The Great Balls of Fire}}}
+\\[4em] 
+\color{k}
+
+\begin{large}
+\noindent\textsf{Sebastien Biass$^1$}\\
+\textsf{Jean-Luc Falcone$^2$}\\
+\textsf{Costanza Bonadonna$^1$}\\
+\end{large}
+
+
+\begin{small}
+\begin{enumerate}
+\item \textit{\textsf{Department of Earth Science, University of Geneva}}
+\item \textit{\textsf{Computer Science, University of Geneva}}
+\end{enumerate}
+\end{small}
+
+\color{namecolor}
+\vfill
+\noindent
+{\huge \textsf{User manual}}
+\vskip\baselineskip
+\noindent
+\color{k}
+\textsf{November 2015}
+\end{titlepage}
+\restoregeometry % restores the geometry
+\nopagecolor% Use this to restore the color pages to white
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2. Front matter, i.e. page numbering as lowercase roman lettes
+
+\pagenumbering{roman}
+
+\tableofcontents
+\cleardoublepage
+%\listoffigures
+%\addcontentsline{toc}{section}{List of Figures}
+%%\cleardoublepage
+%\listoftables
+%\addcontentsline{toc}{section}{List of Tables}
+%\cleardoublepage
+
+% In order to add a section defined in either front or back matter, add the following command under the section definition:
+% \addcontentsline{toc}{section}{Name of the section}
+
+
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3. Main text starts here 
+
+\pagenumbering{arabic}
+
+\section{Bomb simulator}
+
+\subsection{Requirements}
+\label{sec-1}
+
+The \textit{Great Balls of Fire} model (\textbf{\texttt{\textsf{\color{namecolor}GBF}}}) is executed on the Java virtual machine (version 8). It is then
+compatible with any OS which supports Java, notably GNU/Linux, Apple
+MacOSX and MS Windows.
+
+\paragraph{}	The computation is mainly CPU intensive, as each bomb trajectory is
+computed independently. Thus, only a
+limited amount of memory is required even for large simulations (1GB
+should be enough). Multicore CPU or muliprocessor machines will
+however greatly speed up the computation.
+
+\subsection{Getting started}
+\label{sec-2}
+
+As said above, the only external requirement is the Java Virtual Machine (JVM) version 8.
+A suitable version can be downloaded at \href{http://www.oracle.com/technetwork/java/javase/downloads/index.html}{Oracle website}.
+
+\subsubsection{Binary package}
+\label{sec-2-1}
+
+\textbf{\texttt{\textsf{\color{namecolor}GBF}}} is provided as a "fat" \textit{jar} containing all necessary libraries. It can be dowloaded
+directly at \href{http://example.com/download}{the \textbf{\texttt{\textsf{\color{namecolor}GBF}}} download page}. Just copy the \texttt{.jar} file in a working directory, without any
+further operations. Similarly, it can be "uninstalled" by deleting the
+\texttt{.jar} file.
+
+\subsubsection{Building from source}
+\label{sec-2-2}
+
+\textbf{\texttt{\textsf{\color{namecolor}GBF}}} can be built from the source code. You should install first the
+\texttt{sbt} script, instruction are available on the \href{http://www.scala-sbt.org/0.13/tutorial/Manual-Installation.html}{SBT documentation}. A copy of the source code can be obtained on the \href{http://example}{GBF project page}. If
+you use GIT, you can clone the repository using:
+
+\begin{quote}
+\begin{verbatim}
+$ git clone https://github.com/unigeSPC/gbf
+\end{verbatim}
+\end{quote}
+
+If you download the source manually, uncompress it into a fresh directory. The
+input the following commands:
+
+\begin{quote}
+\begin{verbatim}
+$ cd simulator/
+$ sbt
+> compile
+> oneJar
+\end{verbatim}
+\end{quote}
+
+\paragraph{} The resulting \verb+gbf_2.11-yyy-one-jar.jar+ file will be located in the \texttt{target/scala-2.11/}
+directory, where \texttt{yyy} is the GBF version. Note that the first
+time the project is built, all necessary libraries will be
+downloaded. This may take several minutes, but successive builds will
+be much faster.
+
+\subsection{Running GBF}
+\label{sec-3}
+
+\textbf{\texttt{\textsf{\color{namecolor}GBF}}} is a command line only software. To run it you need to first write
+a configuration file and the result will be stored in an ouptut file.
+Both file syntax are described in the following sections. We recommend
+copying the example in . To run the \textbf{\texttt{\textsf{\color{namecolor}GBF}}} model, type:
+
+\begin{quote}
+\begin{verbatim}
+java -jar <gbf.jar> <conf file> <numWorkers>
+\end{verbatim}
+\end{quote}
+
+where \texttt{<gbf.jar>} is the Jar file downloaded or built as described in
+previous section; \texttt{<conf file>} is the configuration file and
+\texttt{<numWorkers>} is the number of threads used in the computation.
+
+\paragraph{Multithread execution}
+\label{sec-3-1}
+
+\textbf{\texttt{\textsf{\color{namecolor}GBF}}} is able to exploit the full power of a multicore/multiprocessor
+architecture. In order to reach best performances, the command line
+parameter <numWorkers> must equal the number of physical cores in your
+machine. Exceeding this number will result in a slow down. It is
+advised to disable hyper-threading if possible.
+
+\subsection{Config file}
+\label{sec-4}
+
+\subsubsection{Syntax}
+\label{sec-4-1}
+
+\paragraph{Types}
+\label{sec-4-1-1}
+
+The configuration types are:
+
+\begin{itemize}
+\item \textsf{\color{namecolor}section:} configuration sub-section. See below.
+\item \textsf{\color{namecolor}integer:} integer number (max: 2,147,483,647)
+\item \textsf{\color{namecolor}float:} floating point number (double precision)
+\item \textsf{\color{namecolor}string:} string of characters. Must be double quoted.
+\end{itemize}
+
+\paragraph{Sections}
+\label{sec-4-1-2}
+
+Configuration parameters are organized into hierarchical sections. Section can be defined
+either using braces or by prefixing parameters with section names (separated using a dot).
+For instance, both examples below are equivalent:
+
+\begin{quote}
+\begin{verbatim}
+#Example 1
+terrain {
+  demFile = "dem/dem_10m.txt"
+  vent {
+    E = 496682.0
+    N = 4250641.0
+    altitude = 400
+  }
+}
+
+#Example 2
+terrain.demFile = "dem/dem_10m.txt"
+terrain.vent.E = 496682.0
+terrain.vent.N = 4250641.0
+terrain.vent.altitude = 400
+\end{verbatim}
+\end{quote}
+
+\paragraph{Include}
+\label{sec-4-1-3}
+
+It is possible to add an \texttt{include} directive at the start of a config file referring
+to another config file. For instance:
+
+\begin{quote}
+\begin{verbatim}
+#In file basic.conf
+wind {
+  speed = 10
+  direction = 12.5
+}
+
+#In file highWind.conf
+include "basic.conf"
+wind.speed = 90
+\end{verbatim}
+\end{quote}
+
+In this example, whenever \texttt{highWind.conf} is used as an input file,
+the \texttt{basic.conf} parameters will be used except when redefined in \texttt{highWind.conf}.
+Both files are thus equivalent to:
+
+\begin{quote}
+\begin{verbatim}
+wind {
+  speed = 90
+  direction = 12.5
+}
+\end{verbatim}
+\end{quote}
+
+\paragraph{System properties}
+\label{sec-4-1-4}
+
+To simplify parameter scan such as sensitivity analysis, parameters
+can also be redefined as command line options. Relevant parameters
+must be prefixed with \texttt{gbf}. For instance, using bash shell:
+
+\begin{quote}
+\begin{verbatim}
+java -Dgbf.wind.speed=40 -jar gbf_0.0.1.jar basic.conf 4
+\end{verbatim}
+\end{quote}
+
+the wind speed will be set to 40 m/s. Command line definitions always
+take precedence on configuration files.
+
+\subsubsection{Parameters}
+\label{sec-4-2}
+
+Here are the parameters used in the configuration file. Types between parenthesis are defined
+above:
+
+
+\begin{itemize}
+\item \textbf{\texttt{\textsf{\color{namecolor}rng:}}} random generator (section)
+	\begin{itemize}
+	\item \texttt{\textsf{\color{namecolor}seed:}} the random generator seed (integer). Using the same seed,
+	with the same configuration option, will produce exactly the same
+	output. Useful for reproducibility
+	\end{itemize}
+\item \textbf{\texttt{\textsf{\color{namecolor}terrain:}}} terrain description (section)
+	\begin{itemize}
+	\item \texttt{\textsf{\color{namecolor}demFile:}} DEM terrain file (string) in a ArcMap Ascii Raster format
+	\item \texttt{\textsf{\color{namecolor}vent:}} vent location (section). All following options are in meters
+		\begin{itemize}
+		\item \texttt{\textsf{\color{namecolor}E:}} vent easting (float)
+		\item \texttt{\textsf{\color{namecolor}N:}} vent northing (float)
+		\item \texttt{\textsf{\color{namecolor}altitude:}} vent altitude (float)
+		\end{itemize}
+	\end{itemize}
+\item \textbf{\texttt{\textsf{\color{namecolor}source:}}} source parameters (section)
+	\begin{itemize}
+	\item \texttt{\textsf{\color{namecolor}densAvg:}} density average in kg/m3 (float)
+	\item \texttt{\textsf{\color{namecolor}densStd:}} density standard deviation in kg/m3 (float)
+	\item \texttt{\textsf{\color{namecolor}phiAvg:}} size average in $\Phi$ units (float)
+	\item \texttt{\textsf{\color{namecolor}phiStd:}} size standard deviation in $\Phi$ units (float)
+	\item \texttt{\textsf{\color{namecolor}velocityAvg:}} velocity average in m/s (float)
+	\item \texttt{\textsf{\color{namecolor}velocityStd:}} velocity standard deviation in m/s (float)
+	\item \texttt{\textsf{\color{namecolor}inclinationAvg:}} inclination average in degree (float). A perfectly vertical
+	inclination is equal to 0
+	\item \texttt{\textsf{\color{namecolor}inclinationStd:}} inclination standard deviation in degrees (float)
+	\end{itemize}
+\item \textbf{\texttt{\textsf{\color{namecolor}wind:}}} wind parameters (section)
+	\begin{itemize}
+	\item \texttt{\textsf{\color{namecolor}speed:}} wind speed in m/s (float)
+	\item \texttt{\textsf{\color{namecolor}direction:}} wind direction in degrees (float). A direction of 0
+	corresponds to a wind coming from North
+	\end{itemize}
+\item \textbf{\texttt{\textsf{\color{namecolor}drag:}}} parameters used in drag computation (section)
+	\begin{itemize}
+	\item \texttt{\textsf{\color{namecolor}timeStep:}} time step used for trajectory integration in seconds (float)
+	\item \texttt{\textsf{\color{namecolor}pressure0:}} pressure at sea level in Pa (float)
+	\item \texttt{\textsf{\color{namecolor}temp0:}} temperature at sea level in Kelvins (float)
+	\item \texttt{\textsf{\color{namecolor}thermalLapse:}} thermal lapse in Kelvins/meter (float)
+	\item \texttt{\textsf{\color{namecolor}reducedDragRadius:}} radius of the disc area centred on the vent,
+	where drag is reduced, in meters (float)
+	\end{itemize}
+\item \textbf{\texttt{\textsf{\color{namecolor}experiment:}}} experiment parameters
+	\begin{itemize}
+	\item \texttt{\textsf{\color{namecolor}size:}} number of bombs in the experiment (integer)
+	\item \texttt{\textsf{\color{namecolor}outputFile:}}: file name of the output file (string). If the path of the output file points to a different directory, the location should exist before running the simulation.
+	\end{itemize}
+\end{itemize}
+
+
+\subsection{Output}
+\label{sec-5}
+
+The output is written to the file defined in the
+\texttt{experiment.outputFile} parameter. Every line of these file represents
+a different bomb impact. Characteristics of the impact are separated by a single
+space. Columns are:
+
+\begin{itemize}[leftmargin=1.5cm,labelindent=16pt, itemsep=0.25pt]
+\item[\textsf{\color{namecolor}1:}]  Easting in meters.
+\item[\textsf{\color{namecolor}2:}]  Northing in meters.
+\item[\textsf{\color{namecolor}3:}]  Bomb mass in kg
+\item[\textsf{\color{namecolor}4:}]  Bomb diameter in meters.
+\item[\textsf{\color{namecolor}5:}]  Kinetic energy at impact in kJ
+\item[\textsf{\color{namecolor}6:}]  Incidence angle at impact in degrees. A perfectly vertical impact has an incidence angle of 0.
+\item[\textsf{\color{namecolor}7:}]  Bomb ejection angle in degrees. A perfectly vertical ejection has an angle of 0.
+\item[\textsf{\color{namecolor}8:}]  Bomb flight time in seconds.
+\end{itemize}
+
+
+
+\section{Post--processing}
+\paragraph{}The post--processing of the \textbf{\texttt{\textsf{\color{namecolor}GBF}}} output is achieved using the \texttt{process\_GBF.m} \textit{Matlab} script. Additionally, results can be visualized using the \texttt{display\_GBG.m} script. As thoroughly described in the companion paper, two approaches are used to transform the results from the \textbf{\texttt{\textsf{\color{namecolor}GBF}}} model (i.e. discrete impacts) into probabilities of impacts to exceed hazardous values of kinetic energies.
+
+\paragraph{} The first approach, referred to as \textsf{\color{namecolor}pixel--based} approach, considers VBP impacts on an equally--spaced grid for each pixel of area $A_{i,j}$ in order to quantify the probability of occurrence a VBP of a given energy threshold ($E_T$) in a given pixel:
+\begin{equation}
+P(A_{i,j}, E_T) = \frac{\sum VBP_{A_{i,j}, E_T} }{n_{VBP}},
+\end{equation}
+where $n_{VBP}$ is the total number of simulated VBPs. This approach is also used to compute the energy occurring in a pixel for a given probability of occurrence. Over the total number of VBPs impacting a given pixel, an empirical survivor function of the kinetic energy is created, from which energy is expressed as a function of probability. Two caveats should be considered when using this approach. First, since the $n^{th}$ percentile returns the lowest $n$\% of the population, there is a $100-n$\% probability that the energy will exceed the energy given by the $n^{th}$ percentile. Second, such energies are calculated over individual pixels and do not convey any notion of probability of occurrence compared to the total number of simulated VBPs. Energies should thus be associated with their respective probabilities of occurrence (i.e. number of VBPs impacting each pixel normalized over the total number of simulated VBPs).
+
+\paragraph{} The second approach, referred to as \textsf{\color{namecolor}zone--based} approach, considers VBP impacts in a zone of interest \textit{Z}, which can be defined either as a concentric ``donuts'' or as radial sectors around the vent. Probabilities of VBPs to exceed given energy thresholds $E_T$ can then be expressed as normalized either on the total number of VBPs simulated or on the number of VBPs that fell in a given zone \textit{Z}. In the first case, $P(Z, E_T)$ answers the question "what is the probability of a VPB to exceed a given energy threshold $E_T$ in a zone \textit{Z}?". In the second case, $P(E_T\vert Z)$ answers the question "knowing that a VBP impacts the zone \textit{Z}, what is its probability to exceed an energy threshold $E_T$?".
+
+\subsection{Running the post--processing}
+\paragraph{} To run the post--processing, open \textit{Matlab} and navigate to the folder where the \texttt{process\_GBF.m} is located. Start the script by typing:
+
+\begin{quote}
+\begin{verbatim}
+>> process_GBF
+\end{verbatim}
+\end{quote}
+
+You are asked to fetch the \texttt{.dat} output file of the \textbf{\texttt{\textsf{\color{namecolor}GBF}}} model, after which a window appears requesting you do fill the following parameters:
+\begin{itemize}[leftmargin=4cm,labelindent=16pt, itemsep=0.25pt]
+	\item[\textsf{\color{namecolor}Name:}] Your run name, which will be used to create an output folder and name output files. In the case a folder with a similar name already exists, a warning will appear
+	\item[\textsf{\color{namecolor}Grid resolution:}] The grid size used for the pixel--based approach;
+	\item[\textsf{\color{namecolor}Energy thresholds:}] Energy thresholds (J) used for computing probability maps. Separate different entries by comas;
+	\item[\textsf{\color{namecolor}Probability thresholds:}] Probability thresholds (\%) used for computing probabilistic energy maps. Separate different entries by comas;
+	\item[\textsf{\color{namecolor}Distance interval:}] Interval (m) used to compute concentric probabilities around the vent. Separate different entries by comas;
+	\item[\textsf{\color{namecolor}Radial interval:}] Interval (degrees) used to compute radial probabilities around the vent. Separate different entries by comas;
+	\item[\textsf{\color{namecolor}Vent easting:}] Easting coordinate (UTM) of the vent. Should be expressed as the zone specified in  \textsf{\color{namecolor}UTM zone};
+	\item[\textsf{\color{namecolor}Vent northing:}] Northing coordinate (UTM) of the vent. Should be expressed as the zone specified in  \textsf{\color{namecolor}UTM zone};
+	\item[\textsf{\color{namecolor}UTM zone:}] UTM zone of the erupting vent.
+\end{itemize}
+
+\paragraph{} The post--processing reads all VBP impacts modelled with the \textbf{\texttt{\textsf{\color{namecolor}GBF}}} model and computes the various probabilities described above. An output folder is created, which contains the following files, where:
+
+\begin{itemize}[leftmargin=4cm,labelindent=16pt, itemsep=0.25pt]
+	\item[\textsf{\color{namecolor}name.mat:}] Main project file, where \textsf{\color{namecolor}name} is the run name previously defined;
+	\item[\textsf{\color{namecolor}en\_PRB\%.txt:}] Energy for a probability of occurrence of PRB (Pixel--based approach; ESRI ASCII Raster format);
+	\item[\textsf{\color{namecolor}nb\_part.txt:}] Number of VBPs in each pixel (Pixel--based approach; ESRI ASCII Raster format);
+	\item[\textsf{\color{namecolor}prob\_pixel\_EN.txt}] Probability (\%) of occurrence of VBPs exceeding an energy threshold EN (Pixel--based approach; ESRI ASCII Raster format);
+	\item[\textsf{\color{namecolor}prob\_dist\_all\_EN.txt:}] Probability $P(Z, E_T)$ (\%) at a given distance from the vent (Zone--based approach; ESRI ASCII Raster format);
+	\item[\textsf{\color{namecolor}prob\_dist\_zone\_EN.txt:}] Probability $P(E_T \vert Z)$ (\%) at a given distance from the vent (Zone--based approach; ESRI ASCII Raster format);
+	\item[\textsf{\color{namecolor}prob\_radial\_all\_EN.txt:}] Probability $P(Z, E_T)$ (\%) at a given radial sector around the vent (Zone--based approach; ESRI ASCII Raster format);
+	\item[\textsf{\color{namecolor}prob\_radial\_zone\_EN.txt:}] Probability $P(E_T \vert Z)$ (\%) at a given radial sector around the vent (Zone--based approach; ESRI ASCII Raster format).
+\end{itemize}
+
+
+\subsection{Displaying results}
+\paragraph{} Results of the post--processing can be easily plotted using the dedicated GUI proposed in the \texttt{display\_GBF.m}. Open \textit{Matlab} and navigate to the folder where the \texttt{display\_GBF.m} is located. Start the script by typing:
+
+\begin{quote}
+\begin{verbatim}
+>> display_GBF
+\end{verbatim}
+\end{quote}
+
+You are first prompted to select the \verb|.mat| file created by the post--processing function. Once selected, a new figure opens, allowing to create the following plots:
+
+\begin{itemize}
+\item \textbf{General}
+	\begin{itemize}
+	\item \textsf{\color{namecolor}Matrix:} Plots all output parameters (Section \ref{sec-5}) against each other;
+	\item \textsf{\color{namecolor}Scatter:} 3D scatter plot of VBPs based on easting, northing and landing altitude. An extra panel opens allowing to plot a fourth parameter as a color gradient;
+	\item \textsf{\color{namecolor}Energy vs distance:} Plots i) the median energy and ii) the number of VBPs with distance from the vent;
+	\item \textsf{\color{namecolor}Histograms:} Plots the results of the zone--based approach as histograms;
+	\item \textsf{\color{namecolor}Number of VBPs:} Plots the map of number of VBPs obtained with the pixel--based approach;
+	\end{itemize}
+\item \textbf{Probability maps}
+	\begin{itemize}
+	\item \textsf{\color{namecolor}Pixel:} Plots probability maps obtained with the pixel--based approach;
+	\item \textsf{\color{namecolor}Distance $P(E_T \vert Z)$:} Plots the map of $P(E_T \vert Z)$ obtained with the zone--based approach on concentric donuts;
+	\item \textsf{\color{namecolor}Distance $P(Z, E_T)$:}  Plots the map of $P(Z, E_T)$ obtained with the zone--based approach on concentric donuts;
+	\item \textsf{\color{namecolor}Radial $P(E_T \vert Z)$:} Plots the map of $P(E_T \vert Z)$ obtained with the zone--based approach on radial sectors;
+	\item \textsf{\color{namecolor}Radial $P(Z, E_T)$:} Plots the map of $P(Z, E_T)$ obtained with the zone--based approach on radial sectors;
+	\end{itemize}
+\item \textbf{Energy maps} Plot energy maps for a given probability of occurrence obtained with the pixel--based approach.
+\end{itemize}
+
+Two additional options can be used to customize plots. Firstly, some plots, such as the above--defined \textit{Matrix} and \textit{Scatter} plots can become very heavy if large sets of VBPs were simulated. In this case, the \textit{Subset} option allows to plot only a given percentage of the total dataset. Secondly, some parameters of interest can span different orders of magnitude. In this case, it can be useful to use the \textit{Log10} option to plot parameters using a logarithmic scale.
+
+\subsection{Exporting results}
+Output files created with the post--processing function are formated as ESRI ASCII Rasters and can be easily imported in most GIS platforms. For more details on this format, see the \href{http://resources.esri.com/help/9.3/arcgisdesktop/com/gp_toolref/spatial_analyst_tools/esri_ascii_raster_format.htm}{ESRI Documentation}. To save figures obtained with the display GUI, it is strongly recommended to use the \textit{export\_fig} function available on the Matlab File Exchange website (contribution \href{http://mathworks.com/matlabcentral/fileexchange/23629-export-fig}{23629}).
+
+\subsection{Dependencies}
+The post--processing and display functions use two additional functions available on the \href{http://www.mathworks.com/matlabcentral/fileexchange/}{Matlab File Exchange website}. All credits go to their respective authors!
+\begin{itemize}
+\item \textsf{\color{namecolor}utm2deg} by Rafael Palacios (contribution \href{http://www.mathworks.com/matlabcentral/fileexchange/10914-utm2deg}{10914})
+\item \textsf{\color{namecolor}plot\_google\_map} by Zohar Bar-Yehuda (contribution \href{http://www.mathworks.com/matlabcentral/fileexchange/27627-zoharby-plot-google-map}{27627})
+\end{itemize}
+
+
+\section{FAQ}
+\label{sec-6}
+
+\subsection{How to cite ?}
+\label{sec-6-1}
+
+The GBF software was first described in:
+
+\begin{quote}
+Sébastien Biass, Jean-Luc Falcone, Costanza Bonadonna, Federico Di Traglia, Marco Pistolesi, Mauro Rosi, Pierino Lestuzzi, \emph{Great Balls of Fire: A probabilistic approach to quantify the hazard related to ballistics — A case study at La Fossa volcano, Vulcano Island, Italy}, Journal of Volcanology and Geothermal Research, Volume 325, 1 October 2016, Pages 1-14, \url{http://dx.doi.org/10.1016/j.jvolgeores.2016.06.006}
+\end{quote}
+
+
+
+\subsection{What language/libraries where used to design GBF ?}
+\label{sec-6-2}
+
+\textbf{\texttt{\textsf{\color{namecolor}GBF}}} was written in the Scala 2.11 language. It uses Akka to
+parallelize trajectory computation.
+
+\subsection{How to fix the (density, size, ejection speed, ejection angle) ?}
+\label{sec-6-3}
+
+Bomb and ejection parameters are defined by providing a average and a
+standard deviation. Values will be drawn at random for each bomb. A parameter
+can be made constant by setting the standard deviation to 0.
+
+\subsection{How to perform a sensitivity analysis ?}
+\label{sec-6-4}
+
+You can override any parameter in the command line. You can then write
+a script to launch several execution. For instance if you want to try
+several wind speed values using bash, you can use the followin snippet:
+
+\begin{verbatim}
+wind="0 10 25 50 100"
+for w in wind; do
+  out="impacts_$w.dat"
+  java -Dgbf.wind.speed=$w -Dgbf.experiment.outputFile=$out \
+         -jar gbf.jar default.conf 4
+done
+\end{verbatim}
+
+Pay attention to use a different output files (provided here by the
+\texttt{-Dgbf.experiment.outputFile} option.
+
+\subsection{How to run larger simulations ?}
+\label{sec-6-5}
+
+Since the number of bombs launched in a simulation is limited by the maximum
+size of an integer, you can run bigger simulation by launching several
+execution with a different seed and a different output file. You can then 
+pool the result by concatening the output files. On unix (Linux or MacOSX):
+
+\begin{verbatim}
+$ cat output1.dat output2.dat output3.dat > pooled_ouput.dat
+\end{verbatim}
+
+\subsection{Do you support distributed memory parallelism ?}
+\label{sec-6-6}
+
+No. Only shared memory is currently supported. However you can launch 
+several jobs on several nodes (using a different seed each time). The results
+can be pooled as described in previous answer.
+
+\subsection{How to request for feature or report a bug ?}
+\label{sec-6-7}
+
+You can use our \href{http://www.example.com/bugs}{issue tracker}. However, because our time is unfotunately limited
+we will mainly focus on correcting bug and we may be reluctant to add new features.
+
+\subsection{How may I request for help ?}
+\label{sec-6-8}
+
+Well, this guide should be enough. If a section is not clear, feel free to
+report an issue as described in the previous answer. We will try to
+improve its content whenever possible.
+
+We do not plan to provide individual help, except in the context of a
+scientific collaboration. Feel free to contact the paper authors if
+you are interested in such collaboration.
+
+\subsection{Do you accept contribution ?}
+\label{sec-6-9}
+
+Of course. If you plan to collaborate, feel free to fork the project
+and send us a pull request with your modifications.
+
+\subsection{What is the GBF license ?}
+\label{sec-6-10}
+
+\textbf{\texttt{\textsf{\color{namecolor}GBF}}} is free and open source software. It is licensed with the GPL 3
+license. Refer to the provided \texttt{LICENSE.txt} file for the exact
+details. In layman terms you can:
+
+\begin{itemize}
+\item Freely download and use the software and its source code.
+\item Redistribute the software, under the condition you keep the same license and
+you redistribute the source code.
+\item Modify the software or integrate it in another project. However if
+you plan to redistribute the result, you should license it under a
+compatible license.
+\end{itemize}
+
+However not covered by GPL, we ask you to cite the original paper if
+you publish data generated with \textbf{\texttt{\textsf{\color{namecolor}GBF}}}.
+% Emacs 24.4.1 (Org mode 8.2.10)
+\end{document}
