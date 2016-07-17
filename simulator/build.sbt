@@ -33,4 +33,14 @@ resourceDirectory in Compile := baseDirectory.value / "resources"
     
 seq(com.github.retronym.SbtOneJar.oneJarSettings: _*)
 
+// This gets rid of the trailing "-one-jar"
+
+artifact in oneJar <<= moduleName(Artifact(_))
+
+// rename the jar
+
+artifact in oneJar ~= { (art: Artifact) =>
+  art.copy(`type` = "jar", extension = "jar", name = art.name + "_FULL")
+}
+
 mainClass in oneJar := Some("ch.unige.gbf.conc.ConcMain")

@@ -15,5 +15,5 @@ Instructions are provided in the [included documentation](https://github.com/uni
 ## License
 
 GBF is a free and open source software releaser under GPL 3. See the
-documentation for more information.
+documentation or the file `LICENSE.txt` for further information.
 
