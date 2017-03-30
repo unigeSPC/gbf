@@ -60,7 +60,7 @@ extends Actor with ActorLogging {
     }
     case Done => {
       log.info( "Shutting Down" )
-      context.system.shutdown
+      context.system.terminate()
     }
   }
 

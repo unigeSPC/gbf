@@ -53,7 +53,7 @@ object Streaming {
     rng: RNG,
     gen: BombGenerator,
     solver: BombBridge
-  ): Flow[Long,String,Unit] =
+  ): Flow[Long,String,akka.NotUsed] =
     Flow[Long]
       .map( id => gen(id, rng) )
       .map( b => solver.run(b) )
@@ -63,7 +63,7 @@ object Streaming {
     rng: RNG,
     gen: BombGenerator,
     solver: BombBridge
-  ): Flow[Long,String,Unit] =
+  ): Flow[Long,String,akka.NotUsed] =
     Flow[Long].map{ id =>
       val b = gen(id, rng) 
       val r = solver.run(b)
@@ -75,7 +75,7 @@ object Streaming {
     rng: RNG,
     gen: BombGenerator,
     solver: BombBridge
-  )(implicit ec: ExecutionContext): Flow[Long,String,Unit] =
+  )(implicit ec: ExecutionContext): Flow[Long,String,akka.NotUsed] =
     Flow[Long]
       .mapAsyncUnordered( parallelism ){ id =>
       Future{
@@ -90,7 +90,7 @@ object Streaming {
     rng: RNG,
     gen: BombGenerator,
     solver: BombBridge
-  )(implicit ec: ExecutionContext): Flow[Long,String,Unit] =
+  )(implicit ec: ExecutionContext): Flow[Long,String,akka.NotUsed] =
     Flow[Long]
       .grouped( batchSize )
       .mapAsyncUnordered( parallelism ){ ids =>
@@ -104,7 +104,7 @@ object Streaming {
     rng: RNG,
     gen: BombGenerator,
     solver: BombBridge
-  )(implicit ec: ExecutionContext): Flow[Long,String,Unit] =
+  )(implicit ec: ExecutionContext): Flow[Long,String,akka.NotUsed] =
     Flow[Long]
       .mapAsyncUnordered( parallelism )( id => Future(gen( id, rng ) ))
       .mapAsyncUnordered( parallelism ){ b => Future{
@@ -113,8 +113,9 @@ object Streaming {
       .map( ImpactList.asString )
 
 
-  def fileSink( pw: PrintWriter ): Sink[String,Future[Unit]] =
+  def fileSink( pw: PrintWriter ): Sink[String,Future[akka.Done]] =
     Sink.foreach( pw.println )
+    //Sink.foreach( (str:String) => pw.println(str) )
 
 }
 
@@ -172,7 +173,7 @@ object StreamingDemo extends App {
       val res = source.via( flow ).runWith( sink )
       res.onComplete{ _ =>
         output.close()
-        system.shutdown
+        system.terminate()
       }
     }
 
