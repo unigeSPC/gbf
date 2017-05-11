@@ -153,8 +153,12 @@ A suitable version can be downloaded at \href{http://www.oracle.com/technetwork/
 \subsubsection{Binary package}
 \label{sec-2-1}
 
-\textbf{\texttt{\textsf{\color{namecolor}GBF}}} is provided as a "fat" \textit{jar} containing all necessary libraries. It can be dowloaded
-directly at \href{http://example.com/download}{the \textbf{\texttt{\textsf{\color{namecolor}GBF}}} download page}. Just copy the \texttt{.jar} file in a working directory, without any
+\textbf{\texttt{\textsf{\color{namecolor}GBF}}} is provided as a "fat"
+\textit{jar} containing all necessary libraries. It can be dowloaded
+directly at
+\href{https://github.com/unigeSPC/gbf/tree/master/simulator/release/}{the
+  \textbf{\texttt{\textsf{\color{namecolor}GBF}}} repository site}. Just
+copy the \texttt{.jar} file in a working directory, without any
 further operations. Similarly, it can be "uninstalled" by deleting the
 \texttt{.jar} file.
 
@@ -183,11 +187,15 @@ $ sbt
 \end{verbatim}
 \end{quote}
 
-\paragraph{} The resulting \verb+gbf_2.11-yyy-one-jar.jar+ file will be located in the \texttt{target/scala-2.11/}
-directory, where \texttt{yyy} is the GBF version. Note that the first
+\paragraph{} The resulting \verb+gbf_FULL_2.11-yyy.jar+ file will be located in the \texttt{target/scala-2.11/}
+directory, where \texttt{yyy} is the GBF version. \textbf{Warning:}
+two different jar files will be present, be sure to pick the one with
+\texttt{FULL} in the name.
+
+Note that the first
 time the project is built, all necessary libraries will be
-downloaded. This may take several minutes, but successive builds will
-be much faster.
+downloaded. This may take several minutes, but successive builds should only
+take a few seconds.
 
 \subsection{Running GBF}
 \label{sec-3}
@@ -549,8 +557,10 @@ can be pooled as described in previous answer.
 \subsection{How to request for feature or report a bug ?}
 \label{sec-6-7}
 
-You can use our \href{http://www.example.com/bugs}{issue tracker}. However, because our time is unfotunately limited
-we will mainly focus on correcting bug and we may be reluctant to add new features.
+You can use our \href{https://github.com/unigeSPC/gbf/issues}{issue
+  tracker}. However, because our time is unfotunately limited, we will
+mainly focus on correcting bugs and we may be reluctant to add new
+features.
 
 \subsection{How may I request for help ?}
 \label{sec-6-8}
