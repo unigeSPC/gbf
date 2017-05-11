@@ -29,6 +29,23 @@ import org.streum.configrity._
 
 class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
   import config._
+
+  private def rotation( inclination: Double, azimuth: Double ): Vec=>Vec = { 
+    val a = inclination
+    val b = azimuth
+    val cosa = cos(a)
+    val sina = sin(a)
+    val cosb = cos(b)
+    val sinb = sin(b)
+    (v: Vec) => {
+      val x = sina*sinb*v.z - cosa*sinb*v.y + cosb*v.x
+      val y = -sina*cosb*v.z + cosa*cosb*v.y + sinb*v.x
+      val z = cosa*v.z + sina*v.y
+      Vec(x,y,z)
+    }
+  }
+  
+
   def apply( id: Long, rng: RNG ): Bomb = {
     val vNorm = rng.nextGaussian( velocityAvg, velocityStd )
     val phi = abs( rng.nextGaussian( inclinationAvg, inclinationStd ) )
