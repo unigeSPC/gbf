@@ -31,6 +31,7 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
   import config._
 
   private def rotation( inclination: Double, azimuth: Double ): Vec=>Vec = { 
+    println("ROOOOT TEST") //FIXME: Remove after testing
     val a = inclination
     val b = azimuth
     val cosa = cos(a)
@@ -44,7 +45,9 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
       Vec(x,y,z)
     }
   }
-  
+
+  //FIXME: For testing purpose only
+  private lazy val testRot = rotation( 30*Pi/180, 0 * Pi / 180 )
 
   def apply( id: Long, rng: RNG ): Bomb = {
     val vNorm = rng.nextGaussian( velocityAvg, velocityStd )
@@ -58,7 +61,8 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
       val sinPhi = sin(phi)
       val vx = vNorm * sinPhi * cos(theta)
       val vy = vNorm * sinPhi * sin(theta)
-      val v = Vec( vx, vy, vz )
+      //val v = Vec( vx, vy, vz ) //FIXME: Restore after testing
+      val v = testRot(Vec( vx, vy, vz ))
       val density = rng.nextGaussian( densAvg, densStd )
       val phiSize = rng.nextGaussian( phiAvg, phiStd )
       val diameter = pow( 2.0, -phiSize )/1000
