@@ -21,14 +21,18 @@
 package ch.unige.gbf
 package xp
 
+
 import terrain.FlatMap
+import math.RNG
+import solver._
 import generators._
 
-object FlatTest {
+object FlatTest extends App{
 
+  val alt = 10
   val lx = 2000
   val ly = 2000
-  val ventZ = 1000
+  val ventZ = alt
 
   val config = VolcanianConfig( 
     sourceX = lx/2,
@@ -40,17 +44,33 @@ object FlatTest {
     phiStd = 1.2,
     velocityAvg = 40,
     velocityStd = 10,
-    inclinationAvg = 0,
-    inclinationStd = 4
+    tilt = 75,
+    spread = 4,
+    azimuth = 90
   )
+
+  val dragConfig = BaseDragConfig.default
 
   val terrain = new FlatMap( 
     resolution = 10,
     error = 0.5,
     lx = lx,
     ly = ly,
-    altitude = 10
+    altitude = alt
   )
 
   val generator =  new VolcanianGenerator( config )
+  
+  val exp = Experiment.withDrag(
+    generator,
+    dragConfig,
+    terrain,
+    RNG(0),
+    ImpactListState("tilt/tilt=75E_spread=4.dat")
+  )
+
+  exp.run(1000)
+
+
+  
 }

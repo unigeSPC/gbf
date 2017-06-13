@@ -29,11 +29,10 @@ import org.streum.configrity._
 
 class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
   import config._
-
-  private def rotation( inclination: Double, azimuth: Double ): Vec=>Vec = { 
-    println("ROOOOT TEST") //FIXME: Remove after testing
-    val a = inclination
-    val b = azimuth
+ 
+  private def rotation( tilt: Double, azimuth: Double ): Vec=>Vec = { 
+    val a = tilt * Pi /180
+    val b = azimuth * Pi / 180
     val cosa = cos(a)
     val sina = sin(a)
     val cosb = cos(b)
@@ -51,7 +50,7 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
 
   def apply( id: Long, rng: RNG ): Bomb = {
     val vNorm = rng.nextGaussian( velocityAvg, velocityStd )
-    val phi = abs( rng.nextGaussian( inclinationAvg, inclinationStd ) )
+    val phi = abs( rng.nextGaussian( 0, spread ) )
     val vz = vNorm * cos(phi)
     if( vz <= 0 ) {
       apply(id,rng)
@@ -61,8 +60,8 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
       val sinPhi = sin(phi)
       val vx = vNorm * sinPhi * cos(theta)
       val vy = vNorm * sinPhi * sin(theta)
-      //val v = Vec( vx, vy, vz ) //FIXME: Restore after testing
-      val v = testRot(Vec( vx, vy, vz ))
+      val v0 = Vec( vx, vy, vz ) //FIXME: Restore after testing
+      val v = rotation( tilt, azimuth )(v0)
       val density = rng.nextGaussian( densAvg, densStd )
       val phiSize = rng.nextGaussian( phiAvg, phiStd )
       val diameter = pow( 2.0, -phiSize )/1000

@@ -36,9 +36,10 @@ case class VolcanianConfig(
   phiStd: Double,
   velocityAvg: Double,
   velocityStd: Double,
-  inclinationAvg: Double,
-  inclinationStd: Double
-) {
+  tilt: Double,
+  azimuth: Double,
+  spread: Double
+ ) {
   lazy val source = Vec( sourceX, sourceY, sourceZ )
   lazy val generator = new VolcanianGenerator(this)
 }
@@ -54,8 +55,9 @@ object VolcanianConfig {
     phiS  <- r( "phiStd" )
     vA    <- r( "velocityAvg" )
     vS    <- r( "velocityStd" )
-    incA  <- r( "inclinationAvg" )
-    incS  <- r( "inclinationStd" )
+    tl  <- r( "tilt" )
+    az  <- r( "azimuth" )
+    spr <- r( "spread" )
   } yield {
     VolcanianConfig( 
       sourceX = dem.vent(0),
@@ -67,8 +69,9 @@ object VolcanianConfig {
       phiStd = phiS,
       velocityAvg = vA,
       velocityStd = vS,
-      inclinationAvg = incA,
-      inclinationStd = incS
+      azimuth = az,
+      spread = spr,
+      tilt = tl
     )
   }
 
@@ -83,8 +86,9 @@ object VolcanianConfig {
     phiStd = 1.2,
     velocityAvg = 125,
     velocityStd = 25,
-    inclinationAvg = 0,
-    inclinationStd = Pi/12
+    spread = Pi/12,
+    tilt = 0,
+    azimuth = 0
   )
 
 }
