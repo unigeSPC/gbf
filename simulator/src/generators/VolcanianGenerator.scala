@@ -50,7 +50,8 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
 
   def apply( id: Long, rng: RNG ): Bomb = {
     val vNorm = rng.nextGaussian( velocityAvg, velocityStd )
-    val phi = abs( rng.nextGaussian( 0, spread ) )
+    val spreadRad = spread * Pi / 180
+    val phi = abs( rng.nextGaussian( 0, spreadRad ) )
     val vz = vNorm * cos(phi)
     if( vz <= 0 ) {
       apply(id,rng)
