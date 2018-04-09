@@ -32,7 +32,7 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
  
   private def rotation( tilt: Double, azimuth: Double ): Vec=>Vec = { 
     val a = tilt * Pi /180
-    val b = azimuth * Pi / 180
+    val b = ( (azimuth+540) % 360 ) * Pi / 180 //Change angle rotation to CCW
     val cosa = cos(a)
     val sina = sin(a)
     val cosb = cos(b)

@@ -76,7 +76,7 @@ object VolcanianConfig {
   }
 
   import scala.math.Pi
-  val default = VolcanianConfig( 
+  lazy val default = VolcanianConfig( 
     sourceX = VolcanoDEM.default.vent(0),
     sourceY = VolcanoDEM.default.vent(1),
     sourceZ = VolcanoDEM.default.vent(2),
