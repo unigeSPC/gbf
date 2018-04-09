@@ -9,8 +9,13 @@ The approach and model are detailed in:
 
 ## Installation and usage
 
+The model is located in the *simulator/* folder and the post-processing functions in the *post-processing/* folder. Note that you **do not necessarily need** to compile the model, you can simply use the simulator/GBF_FULL*.jar file.
 
-Instructions are provided in the [included documentation](https://github.com/unigeSPC/gbf/raw/master/doc/doc.pdf).
+Instructions are provided in the [included documentation](https://github.com/unigeSPC/gbf/raw/master/doc/doc.pdf). Additional instructions on the post-processing of VBP data are also provided in [this blog post](https://e5k.github.io/codes/2017/10/09/ballistic-post-processing/)
+
+## Releases
+**Apr 2018**: Changes in the definition of the source and new post-processing functions
+**Nov 2016**: First release
 
 ## License
 

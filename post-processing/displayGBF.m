@@ -4,7 +4,7 @@
 % Purpose:    GUI to visualize results from the process_GBF function
 % Author:     Sebastien Biass, Jean-Luc Falcone, Costanza Bonadonna
 % Created:    November 2015
-% Updated:    November 2015
+% Updated:    November 2017
 % Copyright:  S Biass, JL Falcone, C Bonadonna - University of Geneva, 2015
 % License:    GNU GPL3
 % 
@@ -27,8 +27,8 @@
 %     You should have received a copy of the GNU General Public License
 %     along with it. If not, see <http://www.gnu.org/licenses/>.
 
-function display_GBF
-global G project
+function displayGBF
+global G VBP
 addpath('dependencies/');
 % Retrieve output file
 [FileName, PathName] = uigetfile('*.mat');
@@ -41,8 +41,8 @@ end
 load(file);
 
 % % Prepare data
-EthreshS = cellfun(@num2str, num2cell(project.Ethresh), 'UniformOutput', false);
-PthreshS = cellfun(@num2str, num2cell(project.Pthresh), 'UniformOutput', false);
+EthreshS = cellfun(@num2str, num2cell(VBP.inBal.eT), 'UniformOutput', false);
+PthreshS = cellfun(@num2str, num2cell(VBP.inBal.pT), 'UniformOutput', false);
 
 scr = get(0,'ScreenSize');
 w   = 500;
@@ -198,12 +198,12 @@ G.fig = figure(...
             'position', [.05 .05 .9 .9],...
             'BackgroundColor', [.3 .3 .3],...
             'ForegroundColor', [1 1 1],...
-            'String', {'Pixel', 'Distance P(E_T|Z)', 'Distance P(Z, E_T)', 'Radial P(E_T|Z)', 'Radial P(Z, E_T)'},...
+            'String', {'Pixel, absolute', 'Pixel, relative', 'Concentric, absolute', 'Concentric, relative', 'Radial, absolute', 'Radial, relative'},...
             'Max', 10,...
             'Value', [],...
             'UserData', 't2',...
             'Callback', @SET_PANNELS);    
-                   
+               %     'String', {'Pixel', 'Distance P(E_T|Z)', 'Distance P(Z, E_T)', 'Radial P(E_T|Z)', 'Radial P(Z, E_T)'},...
     G.p21 = uipanel(...
         'units', 'normalized',...
         'position', [.682 .25 .266 .5],...
@@ -231,7 +231,7 @@ G.fig = figure(...
     G.p3 = uipanel(...
         'units', 'normalized',...
         'position', [.366 .25 .266 .5],...
-        'title', 'Probability threshold (%)',...
+        'title', 'Map type',...
         'BackgroundColor', [.25 .25 .25],...
         'ForegroundColor', [.5 .5 .5],...
         'HighlightColor', [.5 .5 .5],...
@@ -245,11 +245,34 @@ G.fig = figure(...
             'position', [.05 .05 .9 .9],...
             'BackgroundColor', [.3 .3 .3],...
             'ForegroundColor', [1 1 1],...
-            'String', PthreshS,...
+            'String', {'Pixel', 'Concentric', 'Radial'},...
             'Max', 10,...
             'Value', [],...
             'UserData', 't3',...
             'Callback', @SET_PANNELS); 
+        
+            G.p31 = uipanel(...
+                'units', 'normalized',...
+                'position', [.682 .25 .266 .5],...
+                'title', 'Probability threshold (J)',...
+                'BackgroundColor', [.25 .25 .25],...
+                'ForegroundColor', [.5 .5 .5],...
+                'HighlightColor', [.5 .5 .5],...
+                'Visible', 'off', ....
+                'BorderType', 'line');
+
+            G.t31 = uicontrol(...
+                'style', 'listbox',...
+                'Parent', G.p31,...
+                'units', 'normalized',...
+                'position', [.05 .05 .9 .9],...
+                'BackgroundColor', [.3 .3 .3],...
+                'ForegroundColor', [1 1 1],...
+                'String', PthreshS,...
+                'Max', 10,...
+                'Value', [],... 
+                'UserData', 't31',...
+                'Callback', @SET_PANNELS);
 
     G.psubset = uipanel(...
         'units', 'normalized',...
@@ -319,7 +342,7 @@ G.fig = figure(...
  if strcmp(ud, 't0');
      set(G.p1, 'Visible', 'off'); set(G.p11, 'Visible', 'off'); set(G.p12, 'Visible', 'off'); 
      set(G.p2, 'Visible', 'off'); set(G.p21, 'Visible', 'off');
-     set(G.p3, 'Visible', 'off');
+     set(G.p3, 'Visible', 'off'); set(G.p31, 'Visible', 'off');
      if get(hObject, 'Value') == 1
          set(G.p1, 'Visible', 'on'); set(G.t1, 'Value', []); 
      elseif get(hObject, 'Value') == 2
@@ -348,20 +371,23 @@ G.fig = figure(...
  elseif strcmp(ud, 't12')
      plot_hist
         
- elseif strcmp(ud, 't2')         
+ elseif strcmp(ud, 't2')   
+     set(G.p31, 'Visible', 'off'); 
      set(G.p21, 'Visible', 'on'); 
-     
  elseif strcmp(ud, 't21')
      plot_maps(1)
      
  elseif strcmp(ud, 't3')
+     set(G.p21, 'Visible', 'off'); 
+     set(G.p31, 'Visible', 'on'); 
+ elseif strcmp(ud, 't31')
      plot_maps(2)
          
  end
 
  
 function plot_matrix
-global G project
+global G VBP
 
 I = str2double(get(G.subs_edit, 'String'));
 if isnan(I)
@@ -369,36 +395,36 @@ if isnan(I)
     return
 end
 
-randIdx  = randperm(project.n,round(project.n*I/100)); % Downsampling for heavy figures
+randIdx  = randperm(VBP.bal.n,round(VBP.bal.n*I/100)); % Downsampling for heavy figures
 
 figure;
-axes_lab = {'Landing altitude (m a.s.l.)', 'Mass (kg)', 'Diameter (m)', 'Kinetic energy (J)', 'Landing angle (deg)', 'Ejection andgle(deg)', 'Flight time (sec)'};                                        
-[~,AX]   = plotmatrix(project.data(randIdx,:));
+axes_lab = {'Landing altitude (m a.s.l.)', 'Mass (kg)', 'Diameter (m)', 'Kinetic energy (J)'}; %, 'Landing angle (deg)', 'Ejection andgle(deg)', 'Flight time (sec)'};                                        
+[~,AX]   = plotmatrix(VBP.bal.data(randIdx,:));
 
 % Work on axes labels and limits
 for i = 1:length(axes_lab)
     ylabel(AX(i,1), axes_lab{i});
     xlabel(AX(end,i), axes_lab{i});
     for j = 1:length(axes_lab)
-        xlim(AX(i,j), [min(project.data(:,j)), max(project.data(:,j))]);
-        ylim(AX(i,j), [min(project.data(:,i)), max(project.data(:,i))]);
+        xlim(AX(i,j), [min(VBP.bal.data(:,j)), max(VBP.bal.data(:,j))]);
+        ylim(AX(i,j), [min(VBP.bal.data(:,i)), max(VBP.bal.data(:,i))]);
     end
 end
 
 function plot_en_vs_dist
-global project
+global VBP
 
-d_vec = 0:project.res:max(project.d)+project.res;
+d_vec = 0:VBP.inBal.gridRes(1):max(VBP.bal.d)+VBP.inBal.gridRes(1);
 d_str = zeros(length(d_vec),5);
 p_str = zeros(length(d_vec),1);
 
 for i = 1:length(d_vec)-1
-    d_idx       = project.d>=d_vec(i) & project.d<d_vec(i+1);
-    d_str(i,1)  = prctile(project.e(d_idx),2); 
-    d_str(i,2)  = prctile(project.e(d_idx),25);
-    d_str(i,3)  = prctile(project.e(d_idx),50);
-    d_str(i,4)  = prctile(project.e(d_idx),75);
-    d_str(i,5)  = prctile(project.e(d_idx),98);
+    d_idx       = VBP.bal.d>=d_vec(i) & VBP.bal.d<d_vec(i+1);
+    d_str(i,1)  = prctile(VBP.bal.e(d_idx),2); 
+    d_str(i,2)  = prctile(VBP.bal.e(d_idx),25);
+    d_str(i,3)  = prctile(VBP.bal.e(d_idx),50);
+    d_str(i,4)  = prctile(VBP.bal.e(d_idx),75);
+    d_str(i,5)  = prctile(VBP.bal.e(d_idx),98);
     p_str(i)    = sum(d_idx);
 end
 
@@ -422,7 +448,7 @@ xlabel('Distance from the vent (m)');
 ylabel('Number of particles');
 
 function plot_scatter
-global G project
+global G VBP
 
 I = str2double(get(G.subs_edit, 'String'));
 if isnan(I)
@@ -430,22 +456,21 @@ if isnan(I)
     return
 end
 
-randIdx  = randperm(project.n,round(project.n*I/100)); % Downsampling for heavy figures
+randIdx  = randperm(VBP.bal.n,round(VBP.bal.n*I/100)); % Downsampling for heavy figures
 
 idx = get(G.t11, 'Value');
 str = get(G.t11, 'String');
 str = str{idx};
-
-      
+  
 if get(G.log_check, 'Value') == 1
     str       = ['Log10 ', str];
-    data      = log10(project.data(randIdx,idx+1));
+    data      = log10(VBP.bal.data(randIdx,idx+1));
 else
-    data      = project.data(randIdx,idx+1);
+    data      = VBP.bal.data(randIdx,idx+1);
 end
 
 figure;
-scatter3(project.x(randIdx),project.y(randIdx),project.data(randIdx,1),2,data, 'filled');
+scatter3(VBP.bal.x(randIdx),VBP.bal.y(randIdx),VBP.bal.data(randIdx,1),2,data, 'filled');
 axis equal
 xlabel('Easting');
 ylabel('Northing');
@@ -454,33 +479,33 @@ c = colorbar;
 ylabel(c, str);
 
 function plot_hist
-global G project
+global G VBP
 
 if get(G.t12, 'Value') == 1
     figure('Name', 'Distance enveloppes');
     count = 0;
-    for i = 1:length(project.Ethresh)
-        subplot(length(project.Ethresh),2,i+count)
-        bar(project.dist_vec, project.d_hist(:,i,1).*100, 'FaceColor', [.6 .6 .6])
+    for i = 1:length(VBP.inBal.eT)
+        subplot(length(VBP.inBal.eT),2,i+count)
+        bar(VBP.concentric.bin, VBP.concentric.Pabs(:,i), 'FaceColor', [.6 .6 .6])
         if i == 1
-            title({'P(Z, E_T)', ['E_T = ', num2str(project.Ethresh(i)), ' J']});
+            title({'P(Z, E_T)', ['E_T = ', num2str(VBP.inBal.eT(i)), ' J']});
         else
-            title(['E_T = ', num2str(project.Ethresh(i)), ' J']);
+            title(['E_T = ', num2str(VBP.inBal.eT(i)), ' J']);
         end
         xlabel('Distance enveloppe (m)');
         ylabel('Probability (%)');
-        xlim([project.dist_vec(1)-project.distD, project.dist_vec(end)+project.distD])
+        xlim([VBP.concentric.bin(1)-VBP.inBal.dI, VBP.concentric.bin(end)+VBP.inBal.dI])
         
-        subplot(length(project.Ethresh),2,i+count+1)
-        bar(project.dist_vec, project.d_hist(:,i,2).*100, 'FaceColor', [.6 .6 .6])
+        subplot(length(VBP.inBal.eT),2,i+count+1)
+        bar(VBP.concentric.bin, VBP.concentric.Prel(:,i), 'FaceColor', [.6 .6 .6])
         if i == 1
-            title({'P(E_T | Z)', ['E_T = ', num2str(project.Ethresh(i)), ' J']});
+            title({'P(E_T | Z)', ['E_T = ', num2str(VBP.inBal.eT(i)), ' J']});
         else
-            title(['E_T = ', num2str(project.Ethresh(i)), ' J']);
+            title(['E_T = ', num2str(VBP.inBal.eT(i)), ' J']);
         end
         xlabel('Distance enveloppe (m)');
         ylabel('Probability (%)');
-        xlim([project.dist_vec(1)-project.distD, project.dist_vec(end)+project.distD])
+        xlim([VBP.concentric.bin(1)-VBP.inBal.dI, VBP.concentric.bin(end)+VBP.inBal.dI])
         
         count = count + 1;
     end
@@ -489,28 +514,28 @@ elseif get(G.t12, 'Value') == 2
     figure('Name', 'Radial sector');
     % b - Angles
     count = 0;
-    for i = 1:length(project.Ethresh)
-        subplot(length(project.Ethresh),2,i+count)
-        bar(project.a_vec, project.a_hist(:,i,1).*100, 'FaceColor', [.6 .6 .6])
+    for i = 1:length(VBP.inBal.eT)
+        subplot(length(VBP.inBal.eT),2,i+count)
+        bar(VBP.radial.bin, VBP.radial.Pabs(:,i), 'FaceColor', [.6 .6 .6])
         if i == 1
-            title({'P(Z, E_T)', ['E_T = ', num2str(project.Ethresh(i)), ' J']});
+            title({'P(Z, E_T)', ['E_T = ', num2str(VBP.inBal.eT(i)), ' J']});
         else
-            title(['E_T = ', num2str(project.Ethresh(i)), ' J']);
+            title(['E_T = ', num2str(VBP.inBal.eT(i)), ' J']);
         end
         xlabel('Radial sector (degrees)');
         ylabel('Probability (%)');
-        xlim([project.a_vec(1)-project.angD, project.a_vec(end)+project.angD])
+        xlim([VBP.radial.bin(1)-VBP.inBal.rI, VBP.radial.bin(end)+VBP.inBal.rI])
         
-        subplot(length(project.Ethresh),2,i+count+1)
-        bar(project.a_vec, project.a_hist(:,i,2).*100, 'FaceColor', [.6 .6 .6])
+        subplot(length(VBP.inBal.eT),2,i+count+1)
+        bar(VBP.radial.bin, VBP.radial.Prel(:,i), 'FaceColor', [.6 .6 .6])
         if i == 1
-            title({'P(E_T | Z)', ['E_T = ', num2str(project.Ethresh(i)), ' J']});
+            title({'P(E_T | Z)', ['E_T = ', num2str(VBP.inBal.eT(i)), ' J']});
         else
-            title(['E_T = ', num2str(project.Ethresh(i)), ' J']);
+            title(['E_T = ', num2str(VBP.inBal.eT(i)), ' J']);
         end
         xlabel('Radial sector (degrees)');
         ylabel('Probability (%)');
-        xlim([project.a_vec(1)-project.angD, project.a_vec(end)+project.angD])
+        xlim([VBP.radial.bin(1)-VBP.inBal.rI, VBP.radial.bin(end)+VBP.inBal.rI])
         
         count = count + 1;
     end
@@ -520,9 +545,11 @@ function plot_maps(type)
 % type 1 = prob maps
 % type 2 = energy_maps
 % type 3 = number of VBPs
-global G project
+global G VBP
 
+% Plot probability map
 if type == 1
+    % Retrieve GUI
     val_map = get(G.t2, 'Value');
     str_map = get(G.t2, 'String');
     str_map = str_map{val_map};
@@ -531,20 +558,34 @@ if type == 1
     str_en  = get(G.t21, 'String');
     str_en  = str_en{val_en};
     
+    % Set title
     ttl     = [str_map, ' - ', str_en, ' J'];
     
-    if val_map == 1 % pixel
-        data    = project.stor_en(:,:,val_en);
+    % Get lat and lon coordinates
+    if ~isempty(regexpi(str_map, 'pixel', 'once'))
+        lon     = VBP.pixel.lon;
+        lat     = VBP.pixel.lat;
+    else
+        lon     = VBP.concentric.lon;
+        lat     = VBP.concentric.lat;
+    end
+  
+    % Get data to plot
+    if val_map  == 1;% pixel, absolute
+        data    = VBP.pixel.Pabs(:,:,val_en);
     elseif val_map == 2
-        data    = project.p_dist(:,:,val_en,2);
+        data    = VBP.pixel.Prel(:,:,val_en);
     elseif val_map == 3
-        data    = project.p_dist(:,:,val_en,1);
+        data    = VBP.concentric.PabsM(:,:,val_en);
     elseif val_map == 4
-        data    = project.p_angle(:,:,val_en,2);
+        data    = VBP.concentric.PrelM(:,:,val_en);
     elseif val_map == 5
-        data    = project.p_angle(:,:,val_en,1);
+        data    = VBP.radial.PabsM(:,:,val_en);
+    elseif val_map == 6
+        data    = VBP.radial.PrelM(:,:,val_en);
     end
        
+    % Check if log
     if get(G.log_check, 'Value') == 1
         cmaplabel = 'Log10 Probability (%)';
         data      = log10(data);
@@ -552,45 +593,79 @@ if type == 1
         cmaplabel = 'Probability (%)';
     end
     
-elseif type == 2
-    val_prb  = get(G.t3, 'Value');
-    str_prb  = get(G.t3, 'String');
+% Plot energy maps    
+elseif type == 2 
+    % Retrieve GUI
+    val_map = get(G.t3, 'Value');
+    str_map = get(G.t3, 'String');
+    str_map = str_map{val_map};
+    
+    val_prb  = get(G.t31, 'Value');
+    str_prb  = get(G.t31, 'String');
     str_prb  = str_prb{val_prb};
     
+    % Set title
     ttl      = ['Energy for a probability of ', str_prb, ' %'];
       
+    % Get lat and lon coordinates
+    if ~isempty(regexpi(str_map, 'pixel', 'once'))
+        lon     = VBP.pixel.lon;
+        lat     = VBP.pixel.lat;
+    else
+        lon     = VBP.concentric.lon;
+        lat     = VBP.concentric.lat;
+    end
+  
+    % Get data to plot
+    if val_map  == 1;% pixel, absolute
+        data    = VBP.pixel.E(:,:,val_prb);
+    elseif val_map == 2
+        data    = VBP.concentric.EM(:,:,val_prb);
+    elseif val_map == 3
+        data    = VBP.radial.EM(:,:,val_prb);
+    end
+    
+    % Check if log
     if get(G.log_check, 'Value') == 1
         cmaplabel = 'Log10 Energy (kJ)';
-        data      = log10(project.stor_prb(:,:,val_prb));
+        data      = log10(data);
     else
         cmaplabel = 'Energy (kJ)';
-        data      = project.stor_prb(:,:,val_prb);
     end
     
 elseif type == 3
     ttl     = 'Number of VBPs';
-      
+    lon     = VBP.pixel.lon;
+    lat     = VBP.pixel.lat;
     if get(G.log_check, 'Value') == 1
         cmaplabel = 'Log10 Number of VBPs';
-        data      = log10(project.stor_part);
+        data      = log10(VBP.pixel.Nt);
     else
         cmaplabel = 'Number of VBPs';
-        data      = project.stor_part;
+        data      = VBP.pixel.Nt;
     end
-    
 end
 
 
 figure;
-pcolor(project.lon,project.lat,data); shading flat; 
+pcolor(lon,lat,data); shading flat; 
 title(ttl); 
 xlabel('Longitude');
 ylabel('Latitude');
 alpha .35 
 c = colorbar;
 ylabel(c, cmaplabel);
+
+% hold on
+% 
+% if exist('str_map', 'var') && ~isempty(regexpi(str_map, 'concentric', 'once'))
+%     contour(lon, lat, VBP.concentric.binM, 'k');
+% elseif ~isempty(regexpi(str_map, 'radial', 'once'))
+%     contour(lon, lat, VBP.radial.binM, 'k');
+% end
+
 plot_google_map('Maptype', 'terrain');
 
 hold on;
-plot(project.vLon,project.vLat,'^r', 'MarkerSize', 10, 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'k');
+plot(VBP.inBal.lon,VBP.inBal.lat,'^r', 'MarkerSize', 10, 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'k');
 axis equal;
