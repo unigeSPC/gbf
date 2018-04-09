@@ -38,7 +38,7 @@ class VolcanianGenerator( config: VolcanianConfig ) extends BombGenerator {
     val cosb = cos(b)
     val sinb = sin(b)
     (v: Vec) => {
-      val x = sina*sinb*v.z - cosa*sinb*v.y + cosb*v.x
+      val x = -(sina*sinb*v.z - cosa*sinb*v.y + cosb*v.x)
       val y = -sina*cosb*v.z + cosa*cosb*v.y + sinb*v.x
       val z = cosa*v.z + sina*v.y
       Vec(x,y,z)
