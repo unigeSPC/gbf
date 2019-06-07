@@ -11,8 +11,8 @@ The repository contains the following files:
 File | Description
 ----- | ------
 `gbf.jar` | Compiled version of the ballistic model
-`processGBF.mat` | Function to post process model outputs
-`displayGBF.mat` | Function to display processed outputs
+`processGBF.m` | Function to post process model outputs
+`displayGBF.m` | Function to display processed outputs
 `MANUAL.pdf` | Complete user manual
 `README.md` | This file
 `LICENSE.md` | License file
